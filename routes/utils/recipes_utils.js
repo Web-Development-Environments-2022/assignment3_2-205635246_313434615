@@ -36,10 +36,33 @@ async function getRecipeDetails(recipe_id) {
         
     }
 }
+//https://api.spoonacular.com/recipes/complexSearch?query=pasta&number=10&apiKey=67686a03db364dc289fbcfc70626a194
+//https://api.spoonacular.com/recipes/complexSearch?query=pasta&maxFat=25&number=2
+//https://api.spoonacular.com/recipes/716429/information?apiKey=67686a03db364dc289fbcfc70626a194
+async function getRecipeSearchInformation(name, cuisine, diet, intolerance, number_of_results) {
+    return await axios.get(`${api_domain}/complexSearch`, {
+        params: {
+            query:name,
+            number:number_of_results,
+            includeNutrition: false,
+            apiKey: process.env.spooncular_apiKey
+        }
+    });
+}
 
-
+async function searchRecipes(name, cuisine, diet, intolerance, number_of_results) {
+    let recipe_info = await getRecipeSearchInformation(name, cuisine, diet, intolerance, number_of_results);
+    //let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
+    ids=[]
+    for (let i = 0; i < recipe_info.data.results.length; i++) {
+        ids.push(recipe_info.data.results[i].id)
+      }
+    return {ids:ids}
+}
 
 exports.getRecipeDetails = getRecipeDetails;
+exports.searchRecipes = searchRecipes;
+
 
 
 

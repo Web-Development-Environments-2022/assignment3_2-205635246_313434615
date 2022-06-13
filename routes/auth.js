@@ -4,7 +4,7 @@ const MySql = require("../routes/utils/MySql");
 const DButils = require("../routes/utils/DButils");
 const bcrypt = require("bcrypt");
 
-router.post("/Register", async (req, res, next) => {
+router.post("/user/account/register", async (req, res, next) => {
   try {
     // parameters exists
     // valid parameters
@@ -29,8 +29,15 @@ router.post("/Register", async (req, res, next) => {
       user_details.password,
       parseInt(process.env.bcrypt_saltRounds)
     );
+    /*
     await DButils.execQuery(
       `INSERT INTO users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
+      '${user_details.country}', '${hash_password}', '${user_details.email}')`
+    );
+    */
+    await DButils.execQuery(
+      `INSERT INTO users (username, firstname, lastname, country, password, email)
+      VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
       '${user_details.country}', '${hash_password}', '${user_details.email}')`
     );
     res.status(201).send({ message: "user created", success: true });
@@ -39,7 +46,7 @@ router.post("/Register", async (req, res, next) => {
   }
 });
 
-router.post("/Login", async (req, res, next) => {
+router.post("/user/account/login", async (req, res, next) => {
   try {
     // check that username exists
     const users = await DButils.execQuery("SELECT username FROM users");
@@ -68,9 +75,9 @@ router.post("/Login", async (req, res, next) => {
   }
 });
 
-router.post("/Logout", function (req, res) {
+router.post("/user/account/logout", function (req, res) {
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
-  res.send({ success: true, message: "logout succeeded" });
+  res.send({ success: true, message: "logout succeeded!" });
 });
 
 module.exports = router;
