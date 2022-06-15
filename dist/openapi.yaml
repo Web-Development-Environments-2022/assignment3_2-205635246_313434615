@@ -257,12 +257,12 @@ components:
         username:
           type: string
           description: User name.
-          example: Gal
+          example: gari
         password:
           type: string
           description: User password.
           format: password
-          example: gal@123123
+          example: gari
       description: Details the user log in attributes.
     RecipesArray:
       type: object
@@ -275,7 +275,7 @@ components:
     RecipeId:
       type: string
       description: Recipe id
-      example: "13"
+      example: {"recipeId" : "13"}
     RecipeData:
       type: object
       properties:

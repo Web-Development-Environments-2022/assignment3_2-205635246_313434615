@@ -6,6 +6,7 @@ var logger = require("morgan");
 const session = require("client-sessions");
 const DButils = require("./routes/utils/DButils");
 var cors = require('cors')
+var cookieParser = require("cookie-parser");
 
 var app = express();
 app.use(logger("dev")); //logger
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: false })); // parse application/x-www-for
 app.use(express.static(path.join(__dirname, "public"))); //To serve static files such as images, CSS files, and JavaScript files*****add here*****
 //local:
 app.use(express.static(path.join(__dirname, "dist")));
+app.use(cookieParser()); //Parse the cookies into the req.cookies
 //remote:
 // app.use(express.static(path.join(__dirname, '../assignment-3-3-basic/dist')));
 app.get("/",function(req, res)
@@ -77,9 +79,9 @@ app.use(function (req, res, next) {
 app.get("/alive", (req, res) => res.send("I'm alive"));
 
 // Routings
-app.use("/users", user);
+app.use("/user/profile", user);
 app.use("/recipes", recipes);
-app.use(auth);
+app.use("/user/account", auth);
 
 // Default router
 app.use(function (err, req, res, next) {

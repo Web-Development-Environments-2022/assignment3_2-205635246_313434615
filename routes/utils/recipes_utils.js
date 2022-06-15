@@ -56,12 +56,32 @@ async function searchRecipes(name, cuisine, diet, intolerance, number_of_results
     ids=[]
     for (let i = 0; i < recipe_info.data.results.length; i++) {
         ids.push(recipe_info.data.results[i].id)
-      }
+    }
     return {ids:ids}
 }
 
+async function getRecipesPreview(recipes_id_array){
+    let promises=[]
+    let tmp_dict={}
+    for (let i = 0; i < recipes_id_array.length; i++) {
+        const p = new Promise((resolve, reject) =>{ 
+            tmp_dict = getRecipeDetails(recipes_id_array[i])
+            if(tmp_dict != {}){
+                resolve(tmp_dict)
+            }
+            else{
+                reject("Problem with getting recipe details!!")
+            }
+        })
+        promises.push(p)
+    }
+    return Promise.all(promises)
+}
+
+
 exports.getRecipeDetails = getRecipeDetails;
 exports.searchRecipes = searchRecipes;
+exports.getRecipesPreview = getRecipesPreview
 
 
 
