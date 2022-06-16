@@ -10,11 +10,11 @@ async function getFavoriteRecipes(user_id){
 }
 
 // ----------------I added here---------------------------------------NEED TO ADD RECIPE INFO
-async function insertNewRecipe(user_id, r_image, r_name, r_likes, is_v1, is_v2, is_glut_f, is_user_fav,amountIng, analyzedInstructions, name_plates){
+async function insertNewRecipe(user_id, r_image, r_name, r_likes, is_v1, is_v2, is_glut_f, /*is_user_fav,*/amountIng, analyzedInstructions, name_plates){
     await DButils.execQuery(
-    `insert into usersrecipes (user_id,image_recipe,name_recipe,likes,vegetarian,vegan,glutenFree,userFavorite,amountAndIng,
-    instructions,numOfManot) VALUES ('${user_id}', '${r_image}', '${r_name}', '${r_likes}', '${is_v1}', '${is_v2}',
-    '${is_glut_f}', '${is_user_fav}', '${amountIng}', '${analyzedInstructions}', '${name_plates}')`);
+    `insert into usersrecipes (user_id,image_recipe,name_recipe,likes,vegetarian,vegan,glutenFree,amountAndIng,
+    instructions) VALUES ('${user_id}', '${r_image}', '${r_name}', '${r_likes}', '${is_v1}', '${is_v2}',
+    '${is_glut_f}', '${amountIng}', '${analyzedInstructions}')`);
 }
 
 async function getMyRecipes(user_id){
