@@ -34,7 +34,7 @@ router.post('/addFavoriteRecipe', async (req, res, next) => {
   } 
   catch (error) 
   {
-    next(error);
+    res.status(402).send("Invalid recipe Id or already favorited.");
   }
 })
 
@@ -68,7 +68,9 @@ router.post('/addRecipe', async (req, res, next) => {
     const vegan = req.body.vegan;
     const gluten = req.body.glutenFree;
     const favorite = req.body.userFavorite;
-    await user_utils.insertNewRecipe(user_id, image, name, likes, vegetarian, vegan, gluten, favorite);
+    const analyzedInstructions = req.body.analyzedInstructions;
+
+    await user_utils.insertNewRecipe(user_id, image, name, likes, vegetarian, vegan, gluten, favorite, analyzedInstructions);
     res.status(200).send("The Recipe successfully saved in users profile!#!#!#!");
   } 
   catch (error) 

@@ -80,8 +80,8 @@ paths:
               $ref: '#/components/schemas/RecipeId'
         required: true
       responses:
-        "201":
-          description: Successfully added to favorites.
+        "200":
+          description: The Recipe successfully saved as favorite
         "402":
           description: Invalid recipe Id or already favorited.
   /user/profile/getFavouriteRecipe:
@@ -147,7 +147,7 @@ paths:
         style: simple
         explode: false
         schema:
-          $ref: '#/components/schemas/RecipeId'
+          $ref: '#/components/schemas/RecipeIdString'
       responses:
         "201":
           description: Get information about specified recipe.
@@ -205,16 +205,14 @@ paths:
         style: form
         explode: true
         schema:
-          type: string
+          $ref: '#/components/schemas/number_of_results'
       responses:
         "201":
           description: Successful search information about recipe
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RecipeData'
+                $ref: '#/components/schemas/RecipesArray'
 components:
   schemas:
     UserDetails:
@@ -226,7 +224,7 @@ components:
           uniqueItems: true
           type: string
           description: Length 2 to 10 letters.
-          example: makaroshi
+          example: makarosh
         firstname:
           type: string
           description: User first name.
@@ -276,6 +274,10 @@ components:
       type: string
       description: Recipe id
       example: {"recipeId" : "13"}
+    RecipeIdString:
+      type: string
+      description: Recipe id
+      example: 13
     RecipeData:
       type: object
       properties:
@@ -308,6 +310,10 @@ components:
           type: boolean
           description: Did the user add this page to his favorite recipes?
           example: true
+        analyzedInstructions:
+          type: string
+          description: Recipe instructions/information.
+          example: Do this / Add that / Wait 5 minutes.
       description: Recipe object.
     Cusine:
       type: string
@@ -345,3 +351,9 @@ components:
       - Sesame
       - Shellfish
       - Soy
+    number_of_results:
+      type: string
+      enum:
+      - 5
+      - 10
+      - 15

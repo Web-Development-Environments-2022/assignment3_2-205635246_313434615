@@ -22,7 +22,7 @@ async function getRecipeInformation(recipe_id) {
 
 async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
-    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, analyzedInstructions} = recipe_info.data;
 
     return {
         id: id,
@@ -33,19 +33,27 @@ async function getRecipeDetails(recipe_id) {
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
-        
+        analyzedInstructions: analyzedInstructions
     }
 }
 //https://api.spoonacular.com/recipes/complexSearch?query=pasta&number=10&apiKey=67686a03db364dc289fbcfc70626a194
 //https://api.spoonacular.com/recipes/complexSearch?query=pasta&maxFat=25&number=2
 //https://api.spoonacular.com/recipes/716429/information?apiKey=67686a03db364dc289fbcfc70626a194
 async function getRecipeSearchInformation(name, cuisine, diet, intolerance, number_of_results) {
+    if (number_of_results == null){
+        number_of_results = 5
+    }
     return await axios.get(`${api_domain}/complexSearch`, {
         params: {
             query:name,
             number:number_of_results,
             includeNutrition: false,
-            apiKey: process.env.spooncular_apiKey
+            apiKey: process.env.spooncular_apiKey,
+            cuisine: cuisine,
+            diet: diet,
+            intolerance: intolerance,
+            instructionsRequired: true,
+            addRecipeInformation: true
         }
     });
 }
@@ -57,7 +65,9 @@ async function searchRecipes(name, cuisine, diet, intolerance, number_of_results
     for (let i = 0; i < recipe_info.data.results.length; i++) {
         ids.push(recipe_info.data.results[i].id)
     }
-    return {ids:ids}
+    const results = await getRecipesPreview(ids);
+    return results
+    //return {ids:ids}
 }
 
 async function getRecipesPreview(recipes_id_array){
