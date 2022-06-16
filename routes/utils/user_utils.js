@@ -22,21 +22,26 @@ async function getMyRecipes(user_id){
     return my_recipes_id;////kkk
 }
 
-function getMyRecipeDetails(recipe_db_record){
-    return {
-        my_recipe_id: recipe_db_record.my_recipe_id,
-        user_id: recipe_db_record.user_id,
-        image_recipe: recipe_db_record.image_recipe,
-        name_recipe: recipe_db_record.name_recipe,
-        likes: recipe_db_record.likes,
+function getMyRecipeDetails(recipe_db_record, full_details){
+    var a =  {
+        id: recipe_db_record.my_recipe_id,
+        image: recipe_db_record.image_recipe,
+        title: recipe_db_record.name_recipe,
+        popularity: recipe_db_record.likes,
         vegetarian: recipe_db_record.vegetarian,
         vegan: recipe_db_record.vegan,
-        glutenFree: recipe_db_record.glutenFree,
-        userFavorite: recipe_db_record.userFavorite,
+        glutenFree: recipe_db_record.glutenFree
+    }
+    if(!full_details) {
+        return a
+    }
+    var b = {
         amountAndIng: recipe_db_record.amountAndIng,
         instructions: recipe_db_record.instructions,
         numOfManot: recipe_db_record.numOfManot
     }
+    var m = Object.assign({}, a, b);
+    return m
 }
 
 

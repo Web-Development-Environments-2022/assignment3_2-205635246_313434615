@@ -134,7 +134,7 @@ paths:
       tags:
       - general site
       summary: Get spesific recipe information.
-      description: Show all information on a specific user recipe.
+      description: Show all information on a specific recipe.
       parameters:
       - name: recipeID
         in: path
@@ -152,9 +152,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/RecipeData'
-        "206":
-          description: There is No such recipe id .
+                  $ref: '#/components/schemas/RecipesArraypl'
+        "404":
+          description: Request failed with status code 404 (recipe not found).
   /recipes/searchRecipe:
     get:
       tags:
@@ -203,7 +203,7 @@ paths:
         schema:
           $ref: '#/components/schemas/number_of_results'
       responses:
-        "201":
+        "200":
           description: Successful search information about recipe
           content:
             application/json:
@@ -261,10 +261,18 @@ components:
     RecipesArray:
       type: object
       properties:
-        randomRecipes:
+        myRecipes:
           type: array
           items:
             $ref: '#/components/schemas/RecipeData'
+      description: Recipesarray
+    RecipesArraypl:
+      type: object
+      properties:
+        myRecipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeDatadetails'
       description: Recipesarray
     RecipeId:
       type: string
@@ -274,27 +282,23 @@ components:
       type: string
       description: Recipe id
       example: 13
-    RecipeData:
+    RecipeDatadetails:
       type: object
       properties:
-        my_recipe_id:           
+        id:           
           type: integer
           description: recipe ID.
           example: 333
-        user_id:           
-          type: integer
-          description: user ID.
-          example: 333
-        image_recipe:
+        image:
           type: string
           description: The image of the recipe.
           format: URL
           example: URL
-        name_recipe:
+        title:
           type: string
           description: Recipe name.
           example: Brownies
-        likes:
+        popularity:
           type: integer
           description: How many likes the recipe have.
           example: 230
@@ -310,24 +314,59 @@ components:
           type: boolean
           description: Is the recipe gluten Free?
           example: true
-        userFavorite:
-          type: boolean
-          description: Did the user add this page to his favorite recipes?
-          example: true
-          
         amountAndIng:
           type: string
           description: Anout and ingr.
-          example: egg - 2. 
-        analyzedInstructions:
+          example: [ egg - 2, milk - 3]
+        summury:
+          type: string
+          description: Recipe summury.
+          example: Very good food. 
+        steps:
           type: string
           description: Recipe instructions/information.
-          example: Do this / Add that / Wait 5 minutes.
-        numOfManot:
+          example: [step1, step2]
+        servings:
           type: int
           description: how many dishes.
           example: 4
-          
+      description: Recipe object.        
+    RecipeData:
+      type: object
+      properties:
+        id:           
+          type: integer
+          description: recipe ID.
+          example: 333
+        image:
+          type: string
+          description: The image of the recipe.
+          format: URL
+          example: URL
+        title:
+          type: string
+          description: Recipe name.
+          example: Brownies
+        readyInMinutes: 
+          type: integer
+          description: Time in minutes.
+          example: 45
+        popularity:
+          type: integer
+          description: How many likes the recipe have.
+          example: 230
+        vegetarian:
+          type: boolean
+          description: Is the recipe vegetarian?
+          example: true
+        vegan:
+          type: boolean
+          description: Is the recipe vegan?
+          example: true
+        glutenFree:
+          type: boolean
+          description: Is the recipe gluten Free?
+          example: true
       description: Recipe object.
     Cusine:
       type: string

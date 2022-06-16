@@ -1,14 +1,9 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
-
-
-
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
  * @param {*} recipes_info 
  */
-
-
 async function getRecipeInformation(recipe_id) {
     return await axios.get(`${api_domain}/${recipe_id}/information`, {
         params: {
@@ -20,6 +15,26 @@ async function getRecipeInformation(recipe_id) {
 
 async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,analyzedInstructions, summary,extendedIngredients,servings} = recipe_info.data;//gold
+
+    return {
+        id: id,
+        title: title,
+        readyInMinutes: readyInMinutes,
+        image: image,
+        popularity: aggregateLikes,
+        vegan: vegan,
+        vegetarian: vegetarian,
+        glutenFree: glutenFree,
+        steps: getSteps(analyzedInstructions),
+        summary:summary,
+        amountAndIng: getIngredientsList(extendedIngredients),
+        servings: servings
+    }
+}
+
+async function getOnlyPreview(recipe_id) {
+    let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree} = recipe_info.data;//gold
 
     return {
@@ -30,14 +45,30 @@ async function getRecipeDetails(recipe_id) {
         popularity: aggregateLikes,
         vegan: vegan,
         vegetarian: vegetarian,
-        glutenFree: glutenFree
-        //analyzedInstructions: analyzedInstructions
+        glutenFree: glutenFree,
     }
 }
 
-//https://api.spoonacular.com/recipes/complexSearch?query=pasta&number=10&apiKey=67686a03db364dc289fbcfc70626a194
-//https://api.spoonacular.com/recipes/complexSearch?query=pasta&maxFat=25&number=2
-//https://api.spoonacular.com/recipes/716429/information?apiKey=67686a03db364dc289fbcfc70626a194
+function getIngredientsList(ex_list){
+    short_list = []
+    ex_list.map((element) => short_list.push(element.name +' - ' + element.amount))
+    return short_list
+}
+
+function getSteps(ex_list){
+    if(ex_list == null || ex_list.length == 0){
+        return null
+    }
+    var steps = ex_list[0].steps
+    if (steps == null){
+        return null
+    }
+
+    short_list = []
+    steps.map((element) => short_list.push(element.step))
+    return short_list    
+}
+
 async function getRecipeSearchInformation(name, cuisine, diet, intolerance, number_of_results) {
     if (number_of_results == null){
         number_of_results = 5
@@ -66,7 +97,6 @@ async function searchRecipes(name, cuisine, diet, intolerance, number_of_results
     }
     const results = await getRecipesPreview(ids);
     return results
-    //return {ids:ids}
 }
 
 async function getRecipesPreview(recipes_id_array){
@@ -74,7 +104,7 @@ async function getRecipesPreview(recipes_id_array){
     let tmp_dict={}
     for (let i = 0; i < recipes_id_array.length; i++) {
         const p = new Promise((resolve, reject) =>{ 
-            tmp_dict = getRecipeDetails(recipes_id_array[i])
+            tmp_dict = getOnlyPreview(recipes_id_array[i])
             if(tmp_dict != {}){
                 resolve(tmp_dict)
             }

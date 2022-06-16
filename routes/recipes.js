@@ -33,12 +33,4 @@ router.get("/:recipeId", async (req, res, next) => {
   }
 });
 
-
-//Route path: /users/:userId/books/:bookId
-/**
- * This path returns a full details of a recipe by its id
- */
-
-
-
 module.exports = router;
