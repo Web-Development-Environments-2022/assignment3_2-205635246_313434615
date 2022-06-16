@@ -61,15 +61,15 @@ router.post('/addRecipe', async (req, res, next) => {
     const user_id = req.session.user_id;
     const image = req.body.image;
     const name = req.body.name;
-    const likes = req.body.likes;
+    const likes = req.body.popularity;
     const vegetarian = req.body.vegetarian;
     const vegan = req.body.vegan;
     const gluten = req.body.glutenFree;
-    const favorite = req.body.userFavorite;
+    //const favorite = req.body.userFavorite;
     const am_in ="I am a temp!!!"
     const instructions = req.body.analyzedInstructions;
     const num_of_dishes = 5;
-    await user_utils.insertNewRecipe(user_id, image, name, likes, vegetarian, vegan, gluten, favorite, am_in, instructions, num_of_dishes);
+    await user_utils.insertNewRecipe(user_id, image, name, likes, vegetarian, vegan, gluten, /*favorite*/ am_in, instructions, num_of_dishes);
     res.status(200).send("The Recipe successfully saved in users profile!#!#!#!");
   } 
   catch (error) 
