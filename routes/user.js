@@ -87,7 +87,7 @@ router.post('/addRecipe', async (req, res, next) => {
     const recipe_db_records = await user_utils.getMyRecipes(user_id);
     let recipes_array = [];
 
-    let results = recipe_db_records.map((element) => recipes_array.push(user_utils.getMyRecipeDetails(element))); //extracting the recipe ids into array
+    let results = recipe_db_records.map((element) => recipes_array.push(user_utils.getMyRecipeDetails(element,false))); //extracting the recipe ids into array
     //const results = await user_utils.getMyRecipesPreview(recipes_id);
     res.status(200).send({randomRecipes : recipes_array});
   } 
