@@ -18,11 +18,9 @@ async function getRecipeInformation(recipe_id) {
     });
 }
 
-
-
 async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
-    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, analyzedInstructions} = recipe_info.data;
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree} = recipe_info.data;//gold
 
     return {
         id: id,
@@ -32,10 +30,11 @@ async function getRecipeDetails(recipe_id) {
         popularity: aggregateLikes,
         vegan: vegan,
         vegetarian: vegetarian,
-        glutenFree: glutenFree,
-        analyzedInstructions: analyzedInstructions
+        glutenFree: glutenFree
+        //analyzedInstructions: analyzedInstructions
     }
 }
+
 //https://api.spoonacular.com/recipes/complexSearch?query=pasta&number=10&apiKey=67686a03db364dc289fbcfc70626a194
 //https://api.spoonacular.com/recipes/complexSearch?query=pasta&maxFat=25&number=2
 //https://api.spoonacular.com/recipes/716429/information?apiKey=67686a03db364dc289fbcfc70626a194
@@ -87,7 +86,6 @@ async function getRecipesPreview(recipes_id_array){
     }
     return Promise.all(promises)
 }
-
 
 exports.getRecipeDetails = getRecipeDetails;
 exports.searchRecipes = searchRecipes;

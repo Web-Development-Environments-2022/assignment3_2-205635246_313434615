@@ -36,8 +36,8 @@ paths:
       responses:
         "201":
           description: Logged in successfully.
-        "402":
-          description: Logging in failed, invalid details or user is already logged in.
+        "401":
+          description: Username or Password incorrect.
   /user/account/register:
     post:
       tags:
@@ -54,8 +54,8 @@ paths:
       responses:
         "201":
           description: Registration success,The user has been created.
-        "402":
-          description: Registration failed, user already exist or invalid inputs.
+        "409":
+          description: Username taken.
   /user/account/logout:
     post:
       tags:
@@ -64,8 +64,8 @@ paths:
       description: Connection between the user and the server is close.
       operationId: userLogOut
       responses:
-        "205":
-          description: The Connection was closed, the user was not logged in at all. Refresh the page.
+        "200":
+          description: logout succeeded.
   /user/profile/addFavoriteRecipe:
     post:
       tags:
@@ -97,8 +97,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipesArray'
-        "206":
-          description: User have no favorite recipes.
   /user/profile/addRecipe:
     post:
       tags:
@@ -131,8 +129,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipesArray'
-        "206":
-          description: User have no recipes created.
   /recipes/{recipeID}:
     get:
       tags:
@@ -281,12 +277,20 @@ components:
     RecipeData:
       type: object
       properties:
-        image:
+        my_recipe_id:           
+          type: integer
+          description: recipe ID.
+          example: 333
+        user_id:           
+          type: integer
+          description: user ID.
+          example: 333
+        image_recipe:
           type: string
           description: The image of the recipe.
           format: URL
           example: URL
-        name:
+        name_recipe:
           type: string
           description: Recipe name.
           example: Brownies
@@ -310,10 +314,20 @@ components:
           type: boolean
           description: Did the user add this page to his favorite recipes?
           example: true
+          
+        amountAndIng:
+          type: string
+          description: Anout and ingr.
+          example: egg - 2. 
         analyzedInstructions:
           type: string
           description: Recipe instructions/information.
           example: Do this / Add that / Wait 5 minutes.
+        numOfManot:
+          type: int
+          description: how many dishes.
+          example: 4
+          
       description: Recipe object.
     Cusine:
       type: string

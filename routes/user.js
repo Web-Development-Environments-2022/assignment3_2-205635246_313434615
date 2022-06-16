@@ -21,8 +21,6 @@ router.use(async function (req, res, next) {
   }
 });
 
-router.get("/alive1", (req, res) => res.send("I'm alive1"));
-
 /* This path gets body with recipeId and save this recipe in the favorites list of the logged-in user */
 router.post('/addFavoriteRecipe', async (req, res, next) => {
   try 
@@ -68,9 +66,10 @@ router.post('/addRecipe', async (req, res, next) => {
     const vegan = req.body.vegan;
     const gluten = req.body.glutenFree;
     const favorite = req.body.userFavorite;
-    const analyzedInstructions = req.body.analyzedInstructions;
-
-    await user_utils.insertNewRecipe(user_id, image, name, likes, vegetarian, vegan, gluten, favorite, analyzedInstructions);
+    const am_in ="I am a temp!!!"
+    const instructions = req.body.analyzedInstructions;
+    const num_of_dishes = 5;
+    await user_utils.insertNewRecipe(user_id, image, name, likes, vegetarian, vegan, gluten, favorite, am_in, instructions, num_of_dishes);
     res.status(200).send("The Recipe successfully saved in users profile!#!#!#!");
   } 
   catch (error) 
@@ -80,20 +79,21 @@ router.post('/addRecipe', async (req, res, next) => {
 });
 
 /* Get-Recipes */
- router.get('/getRecipe', async (req, res, next) => {
+ router.get('/getRecipes', async (req, res, next) => {
   try 
   {
     const user_id = req.session.user_id;
     //let favorite_recipes = {};
-    const recipes_id = await user_utils.getMyRecipes(user_id);
-    let recipes_id_array = [];
-    recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
-    const results = await recipe_utils.getRecipesPreview(recipes_id_array);
-    res.status(200).send(results);
+    const recipe_db_records = await user_utils.getMyRecipes(user_id);
+    let recipes_array = [];
+
+    let results = recipe_db_records.map((element) => recipes_array.push(user_utils.getMyRecipeDetails(element))); //extracting the recipe ids into array
+    //const results = await user_utils.getMyRecipesPreview(recipes_id);
+    res.status(200).send({randomRecipes : recipes_array});
   } 
   catch (error)
   {
-    next(error);
+    res.status(401).send("Invalid recipe details.");
   }
 });
 
